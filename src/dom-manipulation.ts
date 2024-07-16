@@ -105,6 +105,78 @@ export async function displayAreas() {
 
   launchDiv?.append(outerDiv);
   launchDiv?.append(buttonDiv);
+
+  const viewed = JSON.parse(sessionStorage.getItem("viewed") || "[]");
+  console.log(viewed);
+  if (viewed.length > 0) {
+    const outerDiv2 = document.createElement("div");
+    outerDiv2.className = "w-full max-w-md px-4";
+    const recentTitle = document.createElement("h2");
+    recentTitle.className = "text-3xl font-bold mb-4";
+    recentTitle.innerText = "Previously Viewed";
+    outerDiv2?.append(recentTitle);
+
+    viewed.forEach(async (area: Area) => {
+      const areaData = await fetchAreaWeather(area);
+
+      const areaOuter = document.createElement("div");
+      areaOuter.className = "bg-gray-800 bg-opacity-60 rounded-lg p-4 mb-4";
+
+      const areaContent = document.createElement("div");
+      areaContent.className = "flex justify-between items-center gap-4";
+
+      const areaName = document.createElement("div");
+      areaName.className = "text-xl font-semibold";
+
+      const areaTemperature = document.createElement("div");
+      areaTemperature.className = "text-4xl font-bold";
+
+      const areaCondition = document.createElement("div");
+      areaCondition.className = "text-gray-400";
+
+      areaName.innerText = area.name;
+
+      areaTemperature.innerText = `${areaData.current.temperature_2m.toFixed(
+        0
+      )}°`;
+
+      areaCondition.innerText = WeatherCodes[areaData.current.weather_code];
+
+      const areaContentInnerDiv = document.createElement("div");
+      areaContentInnerDiv.className = "flex justify-start gap-1 items-center";
+
+      const weatherIconDiv = document.createElement("div");
+      weatherIconDiv.className = "items-center";
+      weatherIconDiv.innerHTML = `
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            height="40px"
+            width="40px"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            
+             ${WEATHER_SYMBOLS[areaData.current.weather_code]}
+          </svg>`;
+
+      areaContent.append(areaName);
+      areaContentInnerDiv.append(weatherIconDiv);
+      areaContentInnerDiv.append(areaTemperature);
+      areaContent.append(areaContentInnerDiv);
+
+      areaOuter.append(areaContent);
+      areaOuter.append(areaCondition);
+
+      areaOuter.addEventListener("click", () =>
+        displayWeatherStats(area, areaData)
+      );
+      outerDiv2.append(areaOuter);
+
+      launchDiv.append(outerDiv2);
+    });
+  }
   appDiv?.append(launchDiv);
 }
 
@@ -290,6 +362,10 @@ export function map() {
       latitude: lat,
       longitude: lng,
     };
+    let viewed: Area[] = JSON.parse(sessionStorage.getItem("viewed") || "[]");
+    viewed.unshift(area);
+    sessionStorage.setItem("viewed", JSON.stringify(viewed));
+
     if (area) {
       const weatherData = await fetchAreaWeather(area);
       displayWeatherStats(area, weatherData);
