@@ -1,6 +1,7 @@
 import { Area, CurrentWeatherResponse } from "./api.ts";
 import { areas, fetchArea7DayForecast, fetchAreaWeather } from "./api";
 import { WEATHER_SYMBOLS, WeatherCodes } from "./constants";
+import L from "leaflet";
 
 export async function displayAreas() {
   const removeDiv = document.querySelector("#app > div");
@@ -79,7 +80,31 @@ export async function displayAreas() {
     outerDiv.append(areaOuter);
   }
 
+  const buttonDiv = document.createElement("div");
+  buttonDiv.className = "flex justify-end w-10/12";
+
+  const mapButton = document.createElement("div");
+  mapButton.className =
+    "flex justify-center bg-gray-800 bg-opacity-60 p-3 rounded-full item-center";
+  mapButton.innerHTML = `
+      <svg
+        stroke="currentColor"
+        fill="currentColor"
+        stroke-width="0"
+        viewBox="0 0 288 512"
+        height="20px"
+        width="20px"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+      <path d="M112 316.94v156.69l22.02 33.02c4.75 7.12 15.22 7.12 19.97 0L176 473.63V316.94c-10.39 1.92-21.06 3.06-32 3.06s-21.61-1.14-32-3.06zM144 0C64.47 0 0 64.47 0 144s64.47 144 144 144 144-64.47 144-144S223.53 0 144 0zm0 76c-37.5 0-68 30.5-68 68 0 6.62-5.38 12-12 12s-12-5.38-12-12c0-50.73 41.28-92 92-92 6.62 0 12 5.38 12 12s-5.38 12-12 12z"></path>
+       </svg>`;
+  mapButton.addEventListener("click", () => {
+    map();
+  });
+  buttonDiv.append(mapButton);
+
   launchDiv?.append(outerDiv);
+  launchDiv?.append(buttonDiv);
   appDiv?.append(launchDiv);
 }
 
@@ -208,4 +233,66 @@ export async function displayWeatherStats(
   mainContainer.appendChild(areaDetailsContainer);
   mainContainer.appendChild(forecastDiv);
   appDiv.appendChild(mainContainer);
+}
+
+export function map() {
+  const appDiv = document.querySelector<HTMLDivElement>("#app");
+  const launchDiv = document.querySelector<HTMLDivElement>("#app > div");
+  launchDiv?.remove();
+
+  const mainMapDiv = document.createElement("div");
+
+  const heading = document.createElement("h1");
+  heading.className = "text-3xl font-bold mb-4 p-5";
+  heading.innerText = "Map";
+  mainMapDiv?.append(heading);
+
+  const mapDiv = document.createElement("div");
+  mapDiv.id = "mapid";
+  mapDiv.style.height = "600px";
+  mainMapDiv?.appendChild(mapDiv);
+  const backButtonDiv = document.createElement("div");
+  backButtonDiv.className = "flex justify-start w-0.75";
+
+  const backButton = document.createElement("div");
+  backButton.className = "flex justify-center";
+  backButton.innerHTML = `
+      <svg
+        stroke="currentColor"
+        fill="currentColor"
+        stroke-width="0"
+        viewBox="0 0 576 512"
+        height="50px"
+        width="50px"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M401.4 224h-214l83-79.4c11.9-12.5 11.9-32.7 0-45.2s-31.2-12.5-43.2 0L89 233.4c-6 5.8-9 13.7-9 22.4v.4c0 8.7 3 16.6 9 22.4l138.1 134c12 12.5 31.3 12.5 43.2 0 11.9-12.5 11.9-32.7 0-45.2l-83-79.4h214c16.9 0 30.6-14.3 30.6-32 .1-18-13.6-32-30.5-32z"></path>
+      </svg>`;
+  backButton.addEventListener("click", () => {
+    displayAreas();
+  });
+  backButtonDiv.append(backButton);
+
+  mainMapDiv.append(backButtonDiv);
+
+  appDiv?.append(mainMapDiv);
+
+  const map = L.map("mapid").setView([-26.2, 28.03], 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+  }).addTo(map);
+
+  map.on("click", async (e) => {
+    const { lat, lng } = e.latlng;
+    const area: Area = {
+      name: `${lat.toFixed(2)}°, ${lng.toFixed(2)}°`,
+      latitude: lat,
+      longitude: lng,
+    };
+    if (area) {
+      const weatherData = await fetchAreaWeather(area);
+      displayWeatherStats(area, weatherData);
+    }
+  });
 }
