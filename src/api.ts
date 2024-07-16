@@ -1,4 +1,6 @@
-interface CurrentWeatherResponse {
+
+export interface CurrentWeatherResponse {
+  forecast: any;
   longitude: number;
   latitude: number;
   generationtime_ms: number;
@@ -22,7 +24,8 @@ interface CurrentWeatherResponse {
   };
 }
 
-interface DailyWeatherResponse {
+export interface DailyWeatherResponse {
+    current: any;
     longitude: number;
     latitude: number;
     generationtime_ms: number;
@@ -45,13 +48,13 @@ interface DailyWeatherResponse {
     }
 }
 
-interface Area {
+export interface Area {
   name: string;
   longitude: number;
   latitude: number;
 }
 
-const areas: Area[] = [
+export const areas: Area[] = [
   { name: "Johannesburg", longitude: 28.0436, latitude: -26.2023 },
   { name: "Pretoria", longitude: 28.1878, latitude: -25.7449 },
   { name: "Cape Town", longitude: 18.4232, latitude: -33.9258 },
@@ -68,12 +71,6 @@ export async function fetchAreaWeather(area: Area): Promise<CurrentWeatherRespon
     `The current temperature in ${area.name} is ${weatherDetails.current.temperature_2m}°C`
   );
   return weatherDetails;
-}
-
-export async function fetchAllAreaWeather() {
-  for (const area of areas) {
-    await fetchAreaWeather(area);
-  }
 }
 
 export async function fetchArea7DayForecast(
@@ -93,9 +90,3 @@ export async function fetchArea7DayForecast(
   
     return weatherData;
 }
-
-export async function fetchWeatherForecast() {
-    fetchArea7DayForecast(areas[0]).then((forecast) => {
-      console.log("Forecast data:", forecast);
-    });
-  }

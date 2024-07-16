@@ -1,4 +1,3 @@
-import { fetchAllAreaWeather, fetchWeatherForecast } from "./api";
+import { displayAreas} from "./dom-manipulation";
 
-fetchAllAreaWeather();
-fetchWeatherForecast();
+displayAreas();
