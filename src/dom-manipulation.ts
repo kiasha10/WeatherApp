@@ -1,3 +1,4 @@
+import L from "leaflet";
 import { Area, CurrentWeatherResponse, geocodeArea } from "./api.ts";
 import { areas, fetchArea7DayForecast, fetchAreaWeather } from "./api";
 import {
@@ -6,7 +7,6 @@ import {
   WEATHER_SYMBOLS,
   WeatherCodes,
 } from "./constants";
-import L from "leaflet";
 
 export async function displayAreas() {
   const removeDiv = document.querySelector("#app > div");
@@ -17,11 +17,17 @@ export async function displayAreas() {
   launchDiv.id = "launch";
   launchDiv.className = "flex flex-col items-center py-4";
 
+  const loader = document.createElement("h1");
+  loader.className =
+    "flex items-center justify-center w-full h-full loader text-white text-2xl";
+  loader.innerText = `loading`;
+  launchDiv.append(loader);
+
   const outerDiv = document.createElement("div");
   outerDiv.className = "w-full max-w-md px-4";
 
   const heading = document.createElement("h1");
-  heading.className = "text-3xl font-bold mb-4";
+  heading.className = "text-3xl font-bold mb-4 p-5";
 
   heading.innerText = "Weather";
   outerDiv.append(heading);
@@ -30,31 +36,34 @@ export async function displayAreas() {
   searchDiv.className = "flex justify-start w-11/12 items-center gap-2 p-5";
   const searchInput = document.createElement("input");
   searchInput.type = "text";
-  searchInput.placeholder = "Search area...";
+  searchInput.placeholder = "Where to...";
   searchInput.className =
-    "flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-black";
+    "flex-grow px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:border-blue-500 text-black";
   searchInput.addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
-      await handleSearch();
+      await manageSearch();
     }
   });
 
   searchDiv.append(searchInput);
 
   const searchButton = document.createElement("div");
-  searchButton.className = "flex justify-center bg-blue-500 p-3 rounded-full";
+  searchButton.className =
+    "flex justify-center bg-blue-300 p-3 rounded-full p-4";
   searchButton.innerHTML = getSvgOtherIcon(
     `<path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>`
   );
   searchButton.addEventListener("click", async () => {
-    await handleSearch();
+    await manageSearch();
   });
 
   searchDiv.append(searchButton);
   outerDiv.append(searchDiv);
+  appDiv?.append(launchDiv);
 
   for (const area of areas) {
     const areaData = await fetchAreaWeather(area);
+    loader.remove();
 
     const areaOuter = document.createElement("div");
     areaOuter.className = "bg-gray-800 bg-opacity-60 rounded-lg p-4 mb-4";
@@ -210,16 +219,14 @@ export async function displayAreas() {
       launchDiv.append(outerDiv2);
     });
   }
-  appDiv?.append(launchDiv);
-
-  async function handleSearch() {
+  async function manageSearch() {
     const areaName = searchInput.value.trim();
     if (areaName) {
-      const cityData: GeocodeResponse = await geocodeArea(areaName);
+      const areaData: GeocodeResponse = await geocodeArea(areaName);
       const area: Area = {
-        name: cityData.results[0].name,
-        latitude: +cityData.results[0].latitude,
-        longitude: +cityData.results[0].longitude,
+        name: areaData.results[0].name,
+        latitude: +areaData.results[0].latitude,
+        longitude: +areaData.results[0].longitude,
       };
       displayWeatherStats(area, await fetchAreaWeather(area));
     }
@@ -236,7 +243,7 @@ export async function displayWeatherStats(
   const appDiv = document.querySelector<HTMLDivElement>("#app");
 
   if (!appDiv) {
-    console.error("App div not found");
+    console.error("App div could not be located");
     return;
   }
 
@@ -291,7 +298,7 @@ export async function displayWeatherStats(
 
   const forecastHeading = document.createElement("h2");
   forecastHeading.className = "text-xl font-semibold mb-4";
-  forecastHeading.innerText = "10-DAY FORECAST";
+  forecastHeading.innerText = "7-DAY FORECAST";
   forecastDiv.appendChild(forecastHeading);
 
   const forecastList = document.createElement("div");
@@ -311,9 +318,9 @@ export async function displayWeatherStats(
     const forecastItem = document.createElement("div");
     forecastItem.className = "flex justify-between items-center";
 
-    const dayName = document.createElement("span");
-    dayName.innerText = date;
-    forecastItem.appendChild(dayName);
+    const weatherDate = document.createElement("span");
+    weatherDate.innerText = date;
+    forecastItem.appendChild(weatherDate);
 
     const weatherIcon = document.createElement("svg");
     weatherIcon.className = "w-5 h-5 text-yellow-500";
@@ -370,7 +377,7 @@ export function map() {
   mapDiv.style.height = "600px";
   mainMapDiv?.appendChild(mapDiv);
   const backButtonDiv = document.createElement("div");
-  backButtonDiv.className = "flex justify-start w-0.75";
+  backButtonDiv.className = "flex justify-start w-1 p-5";
 
   const backButton = document.createElement("div");
   backButton.className = "flex justify-center";
