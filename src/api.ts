@@ -1,3 +1,4 @@
+import { GeocodeResponse } from "./constants";
 
 export interface CurrentWeatherResponse {
   forecast: any;
@@ -89,4 +90,12 @@ export async function fetchArea7DayForecast(
     });
   
     return weatherData;
+}
+
+export async function geocodeArea(areaName: string): Promise<GeocodeResponse> {
+  const response = await fetch(
+    `https://geocoding-api.open-meteo.com/v1/search?name=${areaName}`
+  );
+  const geocodeData: GeocodeResponse = await response.json();
+  return geocodeData;
 }
