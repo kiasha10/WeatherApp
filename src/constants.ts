@@ -46,3 +46,43 @@ export const WEATHER_SYMBOLS: { [code: number]: string } = {
     96: iconPaths["Thunderstorm"],
     99: iconPaths["Thunderstorm"],
   };
+
+  export function getSvgOtherIcon(path: string): string {
+    return ` <svg
+          stroke="currentColor"
+          fill="currentColor"
+          stroke-width="0"
+          viewBox="0 0 576 512"
+          height="20px"
+          width="20px"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          ${path}
+       </svg>`;
+  }
+
+  export interface GeocodeResponse {
+    results: {
+      id: number;
+      name: string;
+      latitude: number;
+      longitude: number;
+      elevation: number;
+      feature_code: string;
+      country_code: string;
+      admin1_id: number;
+      admin2_id: number;
+      admin3_id: number;
+      admin4_id: number;
+      timezone: string;
+      population: number;
+      postcodes: string[];
+      country_id: number;
+      country: string;
+      admin1: string;
+      admin2: string;
+      admin3: string;
+      admin4: string;
+    }[];
+    generationtime_ms: number;
+  }
