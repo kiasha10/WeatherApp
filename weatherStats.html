@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather App - Area Details</title>
+    <title>Weather App - Grid Example</title>
     <link rel="stylesheet" href="./src/style.css" />
     <style>
       body {
@@ -12,27 +12,20 @@
     </style>
   </head>
   <body class="flex justify-center items-center h-screen text-white">
-    <div class="max-w-sm w-full mx-auto">
-      <div class="text-center mb-6">
-        <h1 class="text-4xl font-semibold">Johannesburg</h1>
-        <p class="text-6xl font-light">22°</p>
-        <p class="text-2xl">Sunny</p>
-        <p class="text-lg">H:22° L:7°</p>
-      </div>
-
+    <div class="max-w-full w-full mx-auto">
       <div class="bg-gray-800 bg-opacity-60 rounded-lg p-4 mb-6">
         <h2 class="text-xl font-semibold mb-4">7-DAY FORECAST</h2>
-        <div class="space-y-4">
-          <div class="flex justify-between items-center">
-            <span>Today</span>
+        <div class="grid grid-cols-5 gap-4">
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          >
+            <span class="text-sm">Today</span>
             <svg
-              class="w-5 h-5 text-yellow-500"
+              class="w-12 h-12 text-yellow-500 mb-2"
               stroke="currentColor"
               fill="currentColor"
               stroke-width="0"
               viewBox="0 0 512 512"
-              height="200px"
-              width="200px"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -40,13 +33,26 @@
               ></path>
             </svg>
             <div class="flex items-center space-x-2">
-              <span>7°</span>
+              <span>7ºC</span>
               <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div class="h-full bg-blue-400" style="width: 50%"></div>
               </div>
-              <span>22°</span>
+              <span>22ºC</span>
             </div>
           </div>
+
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
         </div>
       </div>
     </div>

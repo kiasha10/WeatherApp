@@ -18,6 +18,7 @@ export async function fetchArea7DayForecast(
       `https://api.open-meteo.com/v1/forecast?latitude=${area.latitude}&longitude=${area.longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code`
     );
     const weatherData: DailyWeatherResponse = await response.json();
+    
   
     return weatherData;
 }
