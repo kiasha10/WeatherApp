@@ -1,3 +1,5 @@
+import { Area } from "./types";
+
 export const WeatherCodes: { [code: number]: string } = {
   0: "Sunny",
   1: "Clear",
@@ -14,6 +16,11 @@ export const WeatherCodes: { [code: number]: string } = {
   71: "Slight Snowfall",
   73: "Moderate Snowfall",
   75: "Heavy Snowfall",
+  77: "Snow grains",
+  80: "Slight Showers",
+  81: "Moderate Showers",
+  82: "Violent Showers",
+  95: "Moderate Thunderstorm",
   96: "Slight Thunderstorms",
   99: "Severe Thunderstorms",
 };
@@ -61,28 +68,9 @@ export const WEATHER_SYMBOLS: { [code: number]: string } = {
        </svg>`;
   }
 
-  export interface GeocodeResponse {
-    results: {
-      id: number;
-      name: string;
-      latitude: number;
-      longitude: number;
-      elevation: number;
-      feature_code: string;
-      country_code: string;
-      admin1_id: number;
-      admin2_id: number;
-      admin3_id: number;
-      admin4_id: number;
-      timezone: string;
-      population: number;
-      postcodes: string[];
-      country_id: number;
-      country: string;
-      admin1: string;
-      admin2: string;
-      admin3: string;
-      admin4: string;
-    }[];
-    generationtime_ms: number;
-  }
+  export const areas: Area[] = [
+    { name: "Johannesburg", longitude: 28.0436, latitude: -26.2023 },
+    { name: "Pretoria", longitude: 28.1878, latitude: -25.7449 },
+    { name: "Cape Town", longitude: 18.4232, latitude: -33.9258 },
+    { name: "Margate", longitude: 30.3705, latitude: -30.8636 },
+  ];
