@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App - Grid Example</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <style>
+      body {
+        background: linear-gradient(to bottom, #4facfe, #4facfe);
+      }
+    </style>
+  </head>
+  <body class="flex justify-center items-center h-screen text-white">
+    <div class="max-w-full w-full mx-auto">
+      <div class="bg-gray-800 bg-opacity-60 rounded-lg p-4 mb-6">
+        <h2 class="text-xl font-semibold mb-4">7-DAY FORECAST</h2>
+        <div class="grid grid-cols-5 gap-4">
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          >
+            <span class="text-sm">Today</span>
+            <svg
+              class="w-12 h-12 text-yellow-500 mb-2"
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M277.3 32h-42.7v64h42.7V32zm129.1 43.7L368 114.1l29.9 29.9 38.4-38.4-29.9-29.9zm-300.8 0l-29.9 29.9 38.4 38.4 29.9-29.9-38.4-38.4zM256 128c-70.4 0-128 57.6-128 128s57.6 128 128 128 128-57.6 128-128-57.6-128-128-128zm224 106.7h-64v42.7h64v-42.7zm-384 0H32v42.7h64v-42.7zM397.9 368L368 397.9l38.4 38.4 29.9-29.9-38.4-38.4zm-283.8 0l-38.4 38.4 29.9 29.9 38.4-38.4-29.9-29.9zm163.2 48h-42.7v64h42.7v-64z"
+              ></path>
+            </svg>
+            <div class="flex items-center space-x-2">
+              <span>7ºC</span>
+              <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-400" style="width: 50%"></div>
+              </div>
+              <span>22ºC</span>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
+          <div
+            class="flex flex-col justify-between items-center bg-gray-700 p-4 rounded"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
